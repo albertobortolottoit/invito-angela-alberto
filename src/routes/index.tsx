@@ -122,10 +122,8 @@ function SplashOverlay({ onEnter }: { onEnter: () => void }) {
         }}
       />
       <p className="text-xs tracking-[0.4em] uppercase text-sage-deep mb-8">Save the Date</p>
-      <h1 className="font-display text-6xl md:text-8xl italic font-light leading-none">
-        Angela
-        <span className="block not-italic text-3xl md:text-4xl my-4 text-sage-deep">&amp;</span>
-        Alberto
+      <h1 className="font-display text-5xl md:text-7xl italic font-light leading-tight">
+        Angela <span className="not-italic text-sage-deep">&amp;</span> Alberto
       </h1>
       <div className="divider-ornament my-8 max-w-[80px] mx-auto text-xs"><span>✦</span></div>
       <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-14">12 · 09 · 2026</p>
@@ -185,10 +183,8 @@ function Hero() {
       />
       <div className="text-center px-6 py-24 max-w-3xl">
         <p className="text-sm tracking-[0.4em] uppercase text-sage-deep mb-8">Save the Date</p>
-        <h1 className="font-display text-6xl md:text-8xl leading-[0.95] italic font-light">
-          {COUPLE.her}
-          <span className="block not-italic text-4xl md:text-5xl my-3 text-sage-deep">&amp;</span>
-          {COUPLE.him}
+        <h1 className="font-display text-5xl md:text-7xl leading-tight italic font-light">
+          {COUPLE.her} <span className="not-italic text-sage-deep">&amp;</span> {COUPLE.him}
         </h1>
         <div className="divider-ornament my-10 max-w-xs mx-auto text-xs tracking-[0.3em] uppercase">
           12 · 09 · 2026
