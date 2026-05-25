@@ -36,44 +36,6 @@ const photos = [
   { src: photo9, alt: "Un pomeriggio insieme" },
 ];
 
-const timeline = [
-  {
-    year: "2019",
-    title: "Il primo incontro",
-    text: "Una sera qualunque che si è trasformata in tutto. Ci siamo incontrati quasi per caso, e da quel momento non ci siamo più separati.",
-    img: photo1,
-  },
-  {
-    year: "2020",
-    title: "Roma",
-    text: "La capitale ci ha visti innamorare tra i suoi vicoli, i tramonti sul Tevere e le piazze illuminate di notte.",
-    img: photo2,
-  },
-  {
-    year: "2021",
-    title: "Le Cascate delle Marmore",
-    text: "Una gita avventurosa che ci ha bagnati di spruzzi e di risate. Ogni viaggio insieme è diventato un ricordo indimenticabile.",
-    img: photo5,
-  },
-  {
-    year: "2022",
-    title: "I mercatini di Natale",
-    text: "Vin brulé, luci calde e la certezza che non ci fosse nessun altro posto in cui avremmo voluto stare.",
-    img: photo4,
-  },
-  {
-    year: "2023",
-    title: "La proposta",
-    text: "Alberto ha chiesto ad Angela di sposarlo. Lei ha detto sì.",
-    img: photo9,
-  },
-  {
-    year: "2026",
-    title: "Per sempre",
-    text: "Il 12 settembre 2026 ci diremo sì davanti alle persone che amiamo.",
-    img: photo6,
-  },
-];
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -142,7 +104,6 @@ function WeddingPage() {
       <Nav />
       <Hero />
       <Storia />
-      <Cronostoria />
       <Galleria />
       <Programma />
       <Mappa />
@@ -321,28 +282,6 @@ function Storia() {
           </p>
         </div>
       </div>
-    </Section>
-  );
-}
-
-function Cronostoria() {
-  return (
-    <Section id="cronostoria" eyebrow="Come ci siamo conosciuti" title="La nostra storia" className="bg-secondary/40">
-      <ol className="space-y-20">
-        {timeline.map((item, i) => (
-          <li key={i} className={`grid md:grid-cols-2 gap-8 items-center ${i % 2 === 1 ? "md:[&>div:first-child]:order-2" : ""}`}>
-            <div
-              className="aspect-[4/3] rounded-sm bg-cover bg-center shadow-lg"
-              style={{ backgroundImage: `url(${item.img})` }}
-            />
-            <div className="py-4">
-              <p className="text-xs tracking-[0.4em] uppercase text-sage-deep mb-2">{item.year}</p>
-              <h3 className="font-display text-2xl md:text-3xl italic font-light mb-4">{item.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{item.text}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
     </Section>
   );
 }
