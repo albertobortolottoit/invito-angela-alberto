@@ -9,8 +9,6 @@ import photo1 from "@/assets/photo-1.jpg";
 import photo2 from "@/assets/photo-2.jpg";
 import photo3 from "@/assets/photo-3.jpg";
 import photo4 from "@/assets/photo-4.jpg";
-import photo5 from "@/assets/photo-5.jpg";
-import photo6 from "@/assets/photo-6.jpg";
 import photo7 from "@/assets/photo-7.jpg";
 import photo8 from "@/assets/photo-8.jpg";
 import photo9 from "@/assets/photo-9.jpg";
@@ -25,10 +23,7 @@ const VENUE_ADDRESS = "Viale Unità D'Italia, 61, 04023 Formia LT";
 const COUPLE = { her: "Angela", him: "Alberto" };
 
 const photos = [
-  { src: photo1, alt: "Angela e Alberto a Roma" },
   { src: photo2, alt: "San Pietro a Natale" },
-  { src: photo6, alt: "Villa Contarini" },
-  { src: photo5, alt: "Cascata delle Marmore" },
   { src: photo3, alt: "Escursione nei boschi" },
   { src: photo8, alt: "Festa con amici" },
   { src: photo4, alt: "Mercatini di Natale" },
