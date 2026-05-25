@@ -14,6 +14,10 @@ import photo6 from "@/assets/photo-6.jpg";
 import photo7 from "@/assets/photo-7.jpg";
 import photo8 from "@/assets/photo-8.jpg";
 import photo9 from "@/assets/photo-9.jpg";
+import villa1 from "@/assets/villa-1.jpg";
+import villa2 from "@/assets/villa-2.jpg";
+import villa3 from "@/assets/villa-3.jpg";
+import villa4 from "@/assets/villa-4.jpg";
 
 const WEDDING_DATE = new Date("2026-09-12T16:00:00+02:00");
 const VENUE_NAME = "Villa Maria Teresa";
@@ -142,6 +146,7 @@ function WeddingPage() {
       <Galleria />
       <Programma />
       <Mappa />
+      <VillaGalleria />
       <Regalo />
       <RSVP />
       <Footer />
@@ -429,6 +434,53 @@ function Galleria() {
         </div>
       )}
     </Section>
+  );
+}
+
+const villaPhotos = [
+  { src: villa1, alt: "Villa Maria Teresa — piscina e giardino" },
+  { src: villa2, alt: "Villa Maria Teresa — ingresso e scalinata" },
+  { src: villa3, alt: "Villa Maria Teresa — vista notturna" },
+  { src: villa4, alt: "Villa Maria Teresa — terrazza a bordo piscina" },
+];
+
+function VillaGalleria() {
+  const [active, setActive] = useState<number | null>(null);
+  return (
+    <section className="py-12 px-6 bg-secondary/40">
+      <div className="max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {villaPhotos.map((p, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setActive(i)}
+              className="group relative aspect-[3/4] overflow-hidden rounded-sm bg-muted focus:outline-none focus:ring-2 focus:ring-sage-deep"
+            >
+              <img
+                src={p.src}
+                alt={p.alt}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+            </button>
+          ))}
+        </div>
+        {active !== null && (
+          <div
+            className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-6 cursor-zoom-out"
+            onClick={() => setActive(null)}
+          >
+            <img
+              src={villaPhotos[active].src}
+              alt={villaPhotos[active].alt}
+              className="max-h-full max-w-full object-contain shadow-2xl"
+            />
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
