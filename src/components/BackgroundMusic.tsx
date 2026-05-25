@@ -14,6 +14,10 @@ export function BackgroundMusic() {
     a.preload = "auto";
     a.addEventListener("error", () => setAvailable(false));
     audioRef.current = a;
+    // attempt autoplay; browsers may block it until user interaction
+    a.play().then(() => setPlaying(true)).catch(() => {
+      // autoplay blocked — user will use the button
+    });
     return () => {
       a.pause();
       audioRef.current = null;
