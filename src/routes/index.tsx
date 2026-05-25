@@ -122,7 +122,6 @@ function SplashOverlay({ onEnter }: { onEnter: () => void }) {
           backgroundPosition: "center top",
         }}
       />
-      <p className="text-xs tracking-[0.4em] uppercase text-sage-deep mb-8">Save the Date</p>
       <h1 className="font-display text-3xl sm:text-5xl md:text-7xl italic font-light leading-tight">
         Angela <span className="not-italic text-sage-deep">&amp;</span> Alberto
       </h1>
@@ -183,7 +182,6 @@ function Hero() {
         }}
       />
       <div className="text-center px-6 py-24 max-w-3xl">
-        <p className="text-sm tracking-[0.4em] uppercase text-sage-deep mb-8">Save the Date</p>
         <h1 className="font-display text-3xl sm:text-5xl md:text-7xl leading-tight italic font-light">
           {COUPLE.her} <span className="not-italic text-sage-deep">&amp;</span> {COUPLE.him}
         </h1>
@@ -251,7 +249,15 @@ function Section({
 
 function Storia() {
   return (
-    <Section id="storia" eyebrow="La nostra storia" title="Come è iniziato tutto">
+    <section id="storia" className="py-24 md:py-32 px-6">
+      <div className="max-w-4xl mx-auto">
+      <blockquote className="text-center mb-16">
+        <p className="font-display text-2xl md:text-3xl italic font-light text-foreground leading-snug max-w-2xl mx-auto">
+          "Una splendida storia non finisce mai più,<br />
+          la metà della mela mi sa che sei tu"
+        </p>
+        <footer className="mt-5 text-xs tracking-[0.3em] uppercase text-sage-deep">— Luciano Ligabue</footer>
+      </blockquote>
       <div className="grid md:grid-cols-2 gap-10 items-center">
         <div
           className="aspect-[4/5] rounded-sm bg-cover bg-center shadow-lg"
@@ -275,7 +281,8 @@ function Storia() {
           </p>
         </div>
       </div>
-    </Section>
+      </div>
+    </section>
   );
 }
 
