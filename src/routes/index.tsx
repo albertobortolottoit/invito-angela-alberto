@@ -265,19 +265,9 @@ function Storia() {
         />
         <div className="space-y-5 text-muted-foreground leading-relaxed">
           <p>
-            Ci siamo incontrati per caso, in una sera qualunque che si è
-            trasformata in tutto. Da allora abbiamo collezionato risate,
-            viaggi, escursioni nei boschi, cene improvvisate e silenzi
-            comodi.
-          </p>
-          <p>
-            Roma ci ha visti innamorare, le Marmore ci hanno bagnati di
-            spruzzi, i mercatini di Natale ci hanno scaldati. Ogni luogo è
-            diventato nostro.
-          </p>
-          <p>
-            Il 12 settembre 2026 faremo la cosa più semplice e più grande
-            che ci sia: dirci sì, davanti alle persone che amiamo.
+            E così abbiamo deciso di dirci sì. Siamo felici di festeggiare
+            questo giorno con voi, che avete fatto parte della nostra storia
+            e che porteremo con noi da qui in avanti.
           </p>
         </div>
       </div>
