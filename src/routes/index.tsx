@@ -533,7 +533,8 @@ function RSVP() {
           name: String(fd.get("name") || ""),
           email: String(fd.get("email") || ""),
           attending: fd.get("attending") === "yes",
-          guests: Number(fd.get("guests") || 1),
+          adults: Number(fd.get("adults") || 1),
+          children: Number(fd.get("children") || 0),
           dietary: String(fd.get("dietary") || ""),
           message: String(fd.get("message") || ""),
         },
@@ -568,20 +569,21 @@ function RSVP() {
         <Field name="name" label="Nome e cognome" required />
         <Field name="email" label="Email" type="email" required />
 
+        <div>
+          <Label>Parteciperai?</Label>
+          <select
+            name="attending"
+            required
+            defaultValue="yes"
+            className="w-full mt-2 bg-card border border-input rounded-sm px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            <option value="yes">Sì, ci sarò</option>
+            <option value="no">Purtroppo no</option>
+          </select>
+        </div>
         <div className="grid sm:grid-cols-2 gap-5">
-          <div>
-            <Label>Parteciperai?</Label>
-            <select
-              name="attending"
-              required
-              defaultValue="yes"
-              className="w-full mt-2 bg-card border border-input rounded-sm px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-            >
-              <option value="yes">Sì, ci sarò</option>
-              <option value="no">Purtroppo no</option>
-            </select>
-          </div>
-          <Field name="guests" label="Numero ospiti" type="number" defaultValue="1" min={0} max={10} />
+          <Field name="adults" label="Adulti (incluso te)" type="number" defaultValue="1" min={0} max={20} />
+          <Field name="children" label="Bambini sotto i 10 anni" type="number" defaultValue="0" min={0} max={20} />
         </div>
 
         <Field name="dietary" label="Intolleranze o allergie (opzionale)" />
