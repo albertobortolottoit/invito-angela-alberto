@@ -6,6 +6,7 @@ import { submitRsvp } from "@/lib/rsvp.functions";
 import { BackgroundMusic } from "@/components/BackgroundMusic";
 
 import photo1 from "@/assets/photo-1.jpg";
+import photoMain from "@/assets/photo-main.jpg";
 import photo2 from "@/assets/photo-2.jpg";
 import photo3 from "@/assets/photo-3.jpg";
 import photo4 from "@/assets/photo-4.jpg";
@@ -116,9 +117,9 @@ function SplashOverlay({ onEnter }: { onEnter: () => void }) {
       <div
         className="absolute inset-0 -z-10 opacity-20"
         style={{
-          backgroundImage: `url(${photo1})`,
+          backgroundImage: `url(${photoMain})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "center top",
         }}
       />
       <p className="text-xs tracking-[0.4em] uppercase text-sage-deep mb-8">Save the Date</p>
@@ -176,7 +177,7 @@ function Hero() {
       <div
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: `linear-gradient(180deg, oklch(0.972 0.014 85 / 0.4), oklch(0.972 0.014 85 / 0.85)), url(${photo1})`,
+          backgroundImage: `linear-gradient(180deg, oklch(0.972 0.014 85 / 0.4), oklch(0.972 0.014 85 / 0.85)), url(${photoMain})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
