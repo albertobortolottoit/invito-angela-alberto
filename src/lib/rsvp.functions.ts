@@ -43,7 +43,7 @@ async function sendRsvpNotification(data: z.infer<typeof rsvpSchema>) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Invito Angela & Alberto <noreply@resend.dev>",
+      from: "Invito Angela & Alberto <onboarding@resend.dev>",
       to: NOTIFY_EMAILS,
       subject: `Nuova RSVP: ${data.name} — ${data.attending ? `Presente (${total} pers.)` : "Assente"}`,
       html,
