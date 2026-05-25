@@ -8,7 +8,8 @@ type Rsvp = {
   name: string;
   email: string;
   attending: boolean;
-  guests: number;
+  adults: number;
+  children: number;
   dietary: string | null;
   message: string | null;
   created_at: string;
@@ -64,37 +65,45 @@ function SignIn() {
       password: String(fd.get("password")),
     });
     setLoading(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error("Credenziali non valide");
   }
 
   return (
     <form onSubmit={onSubmit} className="max-w-sm grid gap-4 bg-card border border-border p-8 rounded-sm">
-      <input
-        name="email"
-        type="email"
-        required
-        placeholder="Email"
-        className="bg-background border border-input rounded-sm px-3 py-3 text-sm"
-      />
-      <input
-        name="password"
-        type="password"
-        required
-        placeholder="Password"
-        className="bg-background border border-input rounded-sm px-3 py-3 text-sm"
-      />
-      <button
-        disabled={loading}
-        className="bg-sage-deep text-primary-foreground py-3 tracking-[0.25em] uppercase text-xs disabled:opacity-60"
-      >
+      <input name="email" type="email" required placeholder="Email"
+        className="bg-background border border-input rounded-sm px-3 py-3 text-sm" />
+      <input name="password" type="password" required placeholder="Password"
+        className="bg-background border border-input rounded-sm px-3 py-3 text-sm" />
+      <button disabled={loading}
+        className="bg-sage-deep text-primary-foreground py-3 tracking-[0.25em] uppercase text-xs disabled:opacity-60">
         {loading ? "…" : "Accedi"}
       </button>
-      <p className="text-xs text-muted-foreground">
-        Solo l'utente admin può accedere. Se non hai ancora un account chiedi
-        a chi gestisce il sito di crearlo e assegnarti il ruolo admin.
-      </p>
     </form>
   );
+}
+
+function downloadCsv(rows: Rsvp[]) {
+  const header = ["Data", "Nome", "Email", "Presenza", "Adulti", "Bambini (<10)", "Totale", "Intolleranze", "Messaggio"];
+  const lines = rows.map((r) => [
+    new Date(r.created_at).toLocaleDateString("it-IT"),
+    r.name,
+    r.email,
+    r.attending ? "Sì" : "No",
+    r.attending ? r.adults : 0,
+    r.attending ? r.children : 0,
+    r.attending ? r.adults + r.children : 0,
+    r.dietary ?? "",
+    r.message ?? "",
+  ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(";"));
+
+  const csv = [header.join(";"), ...lines].join("\n");
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `rsvp-matrimonio-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function RsvpList({ onSignOut }: { onSignOut: () => void }) {
@@ -115,10 +124,7 @@ function RsvpList({ onSignOut }: { onSignOut: () => void }) {
   if (error) {
     return (
       <div className="bg-card border border-border p-6 rounded-sm">
-        <p className="text-sm text-destructive mb-3">
-          Non hai i permessi per vedere le risposte. Il tuo account deve avere il ruolo <code>admin</code>.
-        </p>
-        <p className="text-xs text-muted-foreground mb-4">Dettaglio: {error}</p>
+        <p className="text-sm text-destructive mb-3">Errore: {error}</p>
         <button onClick={onSignOut} className="text-xs underline text-muted-foreground">Esci</button>
       </div>
     );
@@ -127,45 +133,76 @@ function RsvpList({ onSignOut }: { onSignOut: () => void }) {
   if (!rows) return <div className="text-muted-foreground text-sm">Carico…</div>;
 
   const yes = rows.filter((r) => r.attending);
-  const totalGuests = yes.reduce((acc, r) => acc + r.guests, 0);
+  const totAdults = yes.reduce((acc, r) => acc + (r.adults ?? 0), 0);
+  const totChildren = yes.reduce((acc, r) => acc + (r.children ?? 0), 0);
 
   return (
     <div>
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      {/* Stats */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <Stat label="Risposte" value={rows.length} />
-        <Stat label="Confermati" value={yes.length} />
-        <Stat label="Ospiti totali" value={totalGuests} />
+        <Stat label="Presenti" value={yes.length} />
+        <Stat label="Adulti" value={totAdults} />
+        <Stat label="Bambini" value={totChildren} />
+      </div>
+      <div className="bg-sage-deep/10 border border-sage-deep/30 rounded-sm px-5 py-4 mb-8 text-center">
+        <span className="text-xs uppercase tracking-[0.3em] text-sage-deep">Totale partecipanti: </span>
+        <span className="font-display text-2xl text-sage-deep">{totAdults + totChildren}</span>
+        <span className="text-xs text-muted-foreground ml-3">({totAdults} adulti + {totChildren} bambini)</span>
       </div>
 
-      <div className="bg-card border border-border rounded-sm overflow-hidden">
-        <table className="w-full text-sm">
+      {/* Actions */}
+      <div className="flex justify-between items-center mb-4">
+        <p className="text-xs text-muted-foreground">{rows.length} risposte totali</p>
+        <button
+          onClick={() => downloadCsv(rows)}
+          className="px-5 py-2 border border-sage-deep text-sage-deep text-xs tracking-[0.2em] uppercase hover:bg-sage-deep hover:text-primary-foreground transition-colors"
+        >
+          Scarica CSV
+        </button>
+      </div>
+
+      {/* Table */}
+      <div className="bg-card border border-border rounded-sm overflow-x-auto">
+        <table className="w-full text-sm min-w-[700px]">
           <thead className="bg-secondary text-xs uppercase tracking-widest text-sage-deep">
             <tr>
               <th className="text-left p-3">Nome</th>
-              <th className="text-left p-3">Email</th>
-              <th className="text-left p-3">Risposta</th>
-              <th className="text-left p-3">Ospiti</th>
+              <th className="text-left p-3">Presenza</th>
+              <th className="text-left p-3">Adulti</th>
+              <th className="text-left p-3">Bambini</th>
+              <th className="text-left p-3">Totale</th>
               <th className="text-left p-3">Note</th>
               <th className="text-left p-3">Data</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.id} className="border-t border-border">
-                <td className="p-3 font-medium">{r.name}</td>
-                <td className="p-3 text-muted-foreground">{r.email}</td>
-                <td className="p-3">{r.attending ? "Sì" : "No"}</td>
-                <td className="p-3">{r.guests}</td>
-                <td className="p-3 text-muted-foreground text-xs">
+              <tr key={r.id} className="border-t border-border hover:bg-secondary/30">
+                <td className="p-3 font-medium">
+                  {r.name}
+                  <div className="text-xs text-muted-foreground font-normal">{r.email}</div>
+                </td>
+                <td className="p-3">
+                  <span className={r.attending ? "text-green-700" : "text-red-600"}>
+                    {r.attending ? "✅ Sì" : "❌ No"}
+                  </span>
+                </td>
+                <td className="p-3 text-center">{r.attending ? (r.adults ?? 0) : "—"}</td>
+                <td className="p-3 text-center">{r.attending ? (r.children ?? 0) : "—"}</td>
+                <td className="p-3 text-center font-medium">
+                  {r.attending ? (r.adults ?? 0) + (r.children ?? 0) : "—"}
+                </td>
+                <td className="p-3 text-muted-foreground text-xs max-w-[180px]">
                   {[r.dietary, r.message].filter(Boolean).join(" · ") || "—"}
                 </td>
-                <td className="p-3 text-xs text-muted-foreground">
+                <td className="p-3 text-xs text-muted-foreground whitespace-nowrap">
                   {new Date(r.created_at).toLocaleDateString("it-IT")}
                 </td>
               </tr>
             ))}
             {rows.length === 0 && (
-              <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">Ancora nessuna risposta.</td></tr>
+              <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">Ancora nessuna risposta.</td></tr>
             )}
           </tbody>
         </table>
@@ -178,7 +215,7 @@ function RsvpList({ onSignOut }: { onSignOut: () => void }) {
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="bg-card border border-border p-5 rounded-sm">
+    <div className="bg-card border border-border p-5 rounded-sm text-center">
       <div className="font-display text-3xl text-sage-deep">{value}</div>
       <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mt-1">{label}</div>
     </div>
