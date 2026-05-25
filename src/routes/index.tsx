@@ -106,8 +106,8 @@ function WeddingPage() {
       <Storia />
       <Galleria />
       <Programma />
-      <Mappa />
       <VillaGalleria />
+      <Mappa />
       <Regalo />
       <RSVP />
       <Footer />
@@ -429,8 +429,7 @@ function Regalo() {
       <div className="max-w-md mx-auto text-center">
         <p className="text-muted-foreground mb-10 leading-relaxed">
           La vostra presenza è già il regalo più grande che potessimo chiedere.
-          Se desiderate farci un dono, abbiamo scelto di raccogliere un contributo
-          per il nostro viaggio di nozze e la nostra nuova casa.
+          Se desiderate farci un dono, vi lasciamo le nostre coordinate bancarie.
         </p>
         <div className="bg-card border border-border rounded-sm p-8 text-left space-y-4">
           <p className="text-xs tracking-[0.4em] uppercase text-sage-deep text-center mb-6">Bonifico bancario</p>
