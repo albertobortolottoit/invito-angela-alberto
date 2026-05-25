@@ -17,7 +17,7 @@ import photo9 from "@/assets/photo-9.jpg";
 
 const WEDDING_DATE = new Date("2026-09-12T16:00:00+02:00");
 const VENUE_NAME = "Villa Maria Teresa";
-const VENUE_ADDRESS = "Roma, Italia";
+const VENUE_ADDRESS = "Viale Unità D'Italia, 61, 04023 Formia LT";
 const COUPLE = { her: "Angela", him: "Alberto" };
 
 const photos = [
@@ -30,6 +30,45 @@ const photos = [
   { src: photo4, alt: "Mercatini di Natale" },
   { src: photo7, alt: "Cena insieme" },
   { src: photo9, alt: "Un pomeriggio insieme" },
+];
+
+const timeline = [
+  {
+    year: "2019",
+    title: "Il primo incontro",
+    text: "Una sera qualunque che si è trasformata in tutto. Ci siamo incontrati quasi per caso, e da quel momento non ci siamo più separati.",
+    img: photo1,
+  },
+  {
+    year: "2020",
+    title: "Roma",
+    text: "La capitale ci ha visti innamorare tra i suoi vicoli, i tramonti sul Tevere e le piazze illuminate di notte.",
+    img: photo2,
+  },
+  {
+    year: "2021",
+    title: "Le Cascate delle Marmore",
+    text: "Una gita avventurosa che ci ha bagnati di spruzzi e di risate. Ogni viaggio insieme è diventato un ricordo indimenticabile.",
+    img: photo5,
+  },
+  {
+    year: "2022",
+    title: "I mercatini di Natale",
+    text: "Vin brulé, luci calde e la certezza che non ci fosse nessun altro posto in cui avremmo voluto stare.",
+    img: photo4,
+  },
+  {
+    year: "2023",
+    title: "La proposta",
+    text: "Alberto ha chiesto ad Angela di sposarlo. Lei ha detto sì.",
+    img: photo9,
+  },
+  {
+    year: "2026",
+    title: "Per sempre",
+    text: "Il 12 settembre 2026 ci diremo sì davanti alle persone che amiamo.",
+    img: photo6,
+  },
 ];
 
 export const Route = createFileRoute("/")({
@@ -84,18 +123,58 @@ function useCountdown(target: Date) {
 }
 
 function WeddingPage() {
+  const [entered, setEntered] = useState(false);
+
+  function handleEnter() {
+    setEntered(true);
+    window.dispatchEvent(new CustomEvent("wedding:enter"));
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Toaster position="top-center" richColors />
       <BackgroundMusic />
+      {!entered && <SplashOverlay onEnter={handleEnter} />}
       <Nav />
       <Hero />
       <Storia />
+      <Cronostoria />
       <Galleria />
       <Programma />
       <Mappa />
+      <Regalo />
       <RSVP />
       <Footer />
+    </div>
+  );
+}
+
+function SplashOverlay({ onEnter }: { onEnter: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center text-center px-8">
+      <div
+        className="absolute inset-0 -z-10 opacity-20"
+        style={{
+          backgroundImage: `url(${photo1})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      <p className="text-xs tracking-[0.4em] uppercase text-sage-deep mb-8">Save the Date</p>
+      <h1 className="font-display text-6xl md:text-8xl italic font-light leading-none">
+        Angela
+        <span className="block not-italic text-3xl md:text-4xl my-4 text-sage-deep">&amp;</span>
+        Alberto
+      </h1>
+      <div className="divider-ornament my-8 max-w-[80px] mx-auto text-xs"><span>✦</span></div>
+      <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-14">12 · 09 · 2026</p>
+      <button
+        type="button"
+        onClick={onEnter}
+        className="px-14 py-4 border border-sage-deep text-sage-deep hover:bg-sage-deep hover:text-primary-foreground transition-colors tracking-[0.3em] uppercase text-sm"
+      >
+        Entra
+      </button>
     </div>
   );
 }
@@ -106,6 +185,7 @@ function Nav() {
     ["gallery", "Galleria"],
     ["programma", "Programma"],
     ["mappa", "Mappa"],
+    ["regalo", "Regalo"],
     ["rsvp", "RSVP"],
   ];
   return (
@@ -147,7 +227,7 @@ function Hero() {
           12 · 09 · 2026
         </div>
         <p className="text-muted-foreground max-w-md mx-auto mb-10 italic font-display text-xl">
-          {VENUE_NAME} — Roma
+          {VENUE_NAME} — Formia
         </p>
 
         <div className="grid grid-cols-4 gap-3 max-w-md mx-auto">
@@ -234,6 +314,28 @@ function Storia() {
   );
 }
 
+function Cronostoria() {
+  return (
+    <Section id="cronostoria" eyebrow="Come ci siamo conosciuti" title="La nostra storia" className="bg-secondary/40">
+      <ol className="space-y-20">
+        {timeline.map((item, i) => (
+          <li key={i} className={`grid md:grid-cols-2 gap-8 items-center ${i % 2 === 1 ? "md:[&>div:first-child]:order-2" : ""}`}>
+            <div
+              className="aspect-[4/3] rounded-sm bg-cover bg-center shadow-lg"
+              style={{ backgroundImage: `url(${item.img})` }}
+            />
+            <div className="py-4">
+              <p className="text-xs tracking-[0.4em] uppercase text-sage-deep mb-2">{item.year}</p>
+              <h3 className="font-display text-2xl md:text-3xl italic font-light mb-4">{item.title}</h3>
+              <p className="text-muted-foreground leading-relaxed">{item.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </Section>
+  );
+}
+
 function Programma() {
   const steps = [
     ["16:30", "Arrivo degli ospiti"],
@@ -259,14 +361,13 @@ function Programma() {
 }
 
 function Mappa() {
-  // Villa Maria Teresa, Roma — using OSM embed (no API key)
-  const q = encodeURIComponent("Villa Maria Teresa Roma");
+  const q = encodeURIComponent("Viale Unità D'Italia 61 Formia LT");
   return (
     <Section id="mappa" eyebrow="Come arrivare" title={VENUE_NAME} className="bg-secondary/40">
       <p className="text-center text-muted-foreground mb-8">{VENUE_ADDRESS}</p>
       <div className="aspect-[16/9] border border-border rounded-sm overflow-hidden bg-muted">
         <iframe
-          title="Mappa di Villa Maria Teresa"
+          title={`Mappa di ${VENUE_NAME} — Formia`}
           src={`https://www.google.com/maps?q=${q}&output=embed`}
           className="w-full h-full"
           loading="lazy"
@@ -321,6 +422,40 @@ function Galleria() {
           />
         </div>
       )}
+    </Section>
+  );
+}
+
+function Regalo() {
+  return (
+    <Section id="regalo" eyebrow="Regalo di nozze" title="Un pensiero per noi">
+      <div className="max-w-md mx-auto text-center">
+        <p className="text-muted-foreground mb-10 leading-relaxed">
+          La vostra presenza è già il regalo più grande che potessimo chiedere.
+          Se desiderate farci un dono, abbiamo scelto di raccogliere un contributo
+          per il nostro viaggio di nozze e la nostra nuova casa.
+        </p>
+        <div className="bg-card border border-border rounded-sm p-8 text-left space-y-4">
+          <p className="text-xs tracking-[0.4em] uppercase text-sage-deep text-center mb-6">Bonifico bancario</p>
+          <div className="space-y-3 text-sm">
+            <div className="flex gap-3">
+              <span className="text-muted-foreground min-w-[90px]">Intestato a</span>
+              <span className="font-medium">Alberto Bortolotto</span>
+            </div>
+            <div className="flex gap-3">
+              <span className="text-muted-foreground min-w-[90px]">IBAN</span>
+              <span className="font-mono font-medium tracking-wider">IT00 X000 0000 0000 0000 0000 000</span>
+            </div>
+            <div className="flex gap-3">
+              <span className="text-muted-foreground min-w-[90px]">Causale</span>
+              <span className="font-medium">Regalo matrimonio Angela e Alberto</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground mt-8 italic">
+          Grazie di cuore per il vostro affetto.
+        </p>
+      </div>
     </Section>
   );
 }
@@ -458,7 +593,7 @@ function Footer() {
         {COUPLE.her} &amp; {COUPLE.him}
       </div>
       <p className="text-xs tracking-[0.3em] uppercase text-muted-foreground">
-        12 Settembre 2026 · Roma
+        12 Settembre 2026 · Formia
       </p>
     </footer>
   );

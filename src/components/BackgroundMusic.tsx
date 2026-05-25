@@ -14,13 +14,20 @@ export function BackgroundMusic() {
     a.preload = "auto";
     a.addEventListener("error", () => setAvailable(false));
     audioRef.current = a;
-    // attempt autoplay; browsers may block it until user interaction
-    a.play().then(() => setPlaying(true)).catch(() => {
-      // autoplay blocked — user will use the button
-    });
+
+    // play when the user clicks "Entra" on the splash overlay
+    const handleEnter = () => {
+      a.play().then(() => setPlaying(true)).catch(() => {});
+    };
+    window.addEventListener("wedding:enter", handleEnter);
+
+    // also attempt autoplay (works if browser allows it without interaction)
+    a.play().then(() => setPlaying(true)).catch(() => {});
+
     return () => {
       a.pause();
       audioRef.current = null;
+      window.removeEventListener("wedding:enter", handleEnter);
     };
   }, []);
 
