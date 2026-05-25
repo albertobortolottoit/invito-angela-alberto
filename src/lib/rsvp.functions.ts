@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
 
 const rsvpSchema = z.object({
   name: z.string().trim().min(1).max(100),
@@ -76,16 +75,31 @@ async function sendToGoogleSheets(data: z.infer<typeof rsvpSchema>) {
 export const submitRsvp = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => rsvpSchema.parse(input))
   .handler(async ({ data }) => {
-    const { error } = await supabase.from("rsvps").insert({
-      name: data.name,
-      email: data.email,
-      attending: data.attending,
-      adults: data.adults,
-      children: data.children,
-      dietary: data.dietary || null,
-      message: data.message || null,
+    const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+    const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Prefer": "return=minimal",
+      },
+      body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        attending: data.attending,
+        adults: data.adults,
+        children: data.children,
+        dietary: data.dietary || null,
+        message: data.message || null,
+      }),
     });
-    if (error) throw new Error(error.message);
+    if (!res.ok) {
+      const msg = await res.text().catch(() => res.statusText);
+      throw new Error(msg);
+    }
 
     sendRsvpNotification(data).catch(console.error);
     sendToGoogleSheets(data).catch(console.error);
