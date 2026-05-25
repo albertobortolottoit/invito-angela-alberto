@@ -481,7 +481,8 @@ function RSVP() {
       setDone(true);
       toast.success("Grazie! La tua risposta è stata registrata.");
     } catch (err) {
-      toast.error("Qualcosa è andato storto. Riprova.");
+      const msg = err instanceof Error ? err.message : String(err);
+      toast.error(`Errore: ${msg}`);
       console.error(err);
     } finally {
       setLoading(false);
