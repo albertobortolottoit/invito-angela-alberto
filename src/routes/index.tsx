@@ -17,10 +17,10 @@ import photo9 from "@/assets/photo-9.jpg";
 const WEDDING_DATE = new Date("2026-09-12T16:00:00+02:00");
 const VENUE_NAME = "Villa Maria Teresa";
 const VENUE_ADDRESS = "Roma, Italia";
-const COUPLE = { her: "Alby", him: "Marco" }; // placeholder names
+const COUPLE = { her: "Angela", him: "Alberto" };
 
 const photos = [
-  { src: photo1, alt: "Alby e Marco a Roma" },
+  { src: photo1, alt: "Angela e Alberto a Roma" },
   { src: photo2, alt: "San Pietro a Natale" },
   { src: photo6, alt: "Villa Contarini" },
   { src: photo5, alt: "Cascata delle Marmore" },
@@ -111,7 +111,7 @@ function Nav() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur bg-background/70 border-b border-border/50">
       <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <a href="#top" className="font-display text-lg tracking-wide">A &amp; M</a>
+        <a href="#top" className="font-display text-lg tracking-wide">A &amp; A</a>
         <ul className="hidden md:flex gap-7 text-sm text-muted-foreground">
           {items.map(([id, label]) => (
             <li key={id}>
