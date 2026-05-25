@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { toast, Toaster } from "sonner";
 import { submitRsvp } from "@/lib/rsvp.functions";
+import { BackgroundMusic } from "@/components/BackgroundMusic";
 
 import photo1 from "@/assets/photo-1.jpg";
 import photo2 from "@/assets/photo-2.jpg";
@@ -86,6 +87,7 @@ function WeddingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Toaster position="top-center" richColors />
+      <BackgroundMusic />
       <Nav />
       <Hero />
       <Storia />
