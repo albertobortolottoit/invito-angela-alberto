@@ -7,6 +7,7 @@ import { BackgroundMusic } from "@/components/BackgroundMusic";
 
 import photo1 from "@/assets/photo-1.jpg";
 import photoMain from "@/assets/photo-main.jpg";
+import villaCeremony from "@/assets/villa-ceremony.jpg";
 import photo2 from "@/assets/photo-2.jpg";
 import photo3 from "@/assets/photo-3.jpg";
 import photo4 from "@/assets/photo-4.jpg";
@@ -116,7 +117,7 @@ function SplashOverlay({ onEnter }: { onEnter: () => void }) {
       <div
         className="absolute inset-0 -z-10 opacity-20"
         style={{
-          backgroundImage: `url(${photoMain})`,
+          backgroundImage: `url(${villaCeremony})`,
           backgroundSize: "cover",
           backgroundPosition: "center top",
         }}
@@ -176,7 +177,7 @@ function Hero() {
       <div
         className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: `linear-gradient(180deg, oklch(0.972 0.014 85 / 0.4), oklch(0.972 0.014 85 / 0.85)), url(${photoMain})`,
+          backgroundImage: `linear-gradient(180deg, oklch(0.972 0.014 85 / 0.4), oklch(0.972 0.014 85 / 0.85)), url(${villaCeremony})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -254,7 +255,7 @@ function Storia() {
       <div className="grid md:grid-cols-2 gap-10 items-center">
         <div
           className="aspect-[4/5] rounded-sm bg-cover bg-center shadow-lg"
-          style={{ backgroundImage: `url(${photo2})` }}
+          style={{ backgroundImage: `url(${villaCeremony})` }}
         />
         <div className="space-y-5 text-muted-foreground leading-relaxed">
           <p>
