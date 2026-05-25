@@ -91,10 +91,9 @@ function WeddingPage() {
       <Nav />
       <Hero />
       <Storia />
-      <Dettagli />
+      <Galleria />
       <Programma />
       <Mappa />
-      <Galleria />
       <RSVP />
       <Footer />
     </div>
@@ -104,10 +103,9 @@ function WeddingPage() {
 function Nav() {
   const items = [
     ["storia", "Storia"],
-    ["dettagli", "Dettagli"],
+    ["gallery", "Galleria"],
     ["programma", "Programma"],
     ["mappa", "Mappa"],
-    ["gallery", "Galleria"],
     ["rsvp", "RSVP"],
   ];
   return (
@@ -236,42 +234,12 @@ function Storia() {
   );
 }
 
-function Dettagli() {
-  const cards = [
-    { title: "Cerimonia", time: "16:00", desc: "Rito civile all'aperto, nel giardino della Villa." },
-    { title: "Aperitivo", time: "17:30", desc: "Bollicine e finger food sotto il pergolato." },
-    { title: "Cena", time: "19:30", desc: "Cena placée con menù mediterraneo." },
-    { title: "Festa", time: "22:00", desc: "Musica e balli fino a tarda notte." },
-  ];
-  return (
-    <Section id="dettagli" eyebrow="Il giorno" title="Dettagli & Dress code" className="bg-secondary/40">
-      <div className="grid sm:grid-cols-2 gap-5">
-        {cards.map((c) => (
-          <div key={c.title} className="bg-card border border-border p-7 rounded-sm">
-            <div className="flex items-baseline justify-between mb-3">
-              <h3 className="font-display text-2xl">{c.title}</h3>
-              <span className="text-sage-deep tracking-widest text-sm">{c.time}</span>
-            </div>
-            <p className="text-sm text-muted-foreground">{c.desc}</p>
-          </div>
-        ))}
-      </div>
-      <div className="text-center mt-12 max-w-xl mx-auto">
-        <p className="text-xs tracking-[0.3em] uppercase text-sage-deep mb-3">Dress code</p>
-        <p className="text-muted-foreground italic font-display text-xl">
-          Elegante in tonalità chiare, terra e verde salvia. Evitate il bianco — è il suo giorno.
-        </p>
-      </div>
-    </Section>
-  );
-}
-
 function Programma() {
   const steps = [
-    ["15:30", "Arrivo degli ospiti"],
-    ["16:00", "Cerimonia"],
-    ["17:30", "Aperitivo in giardino"],
-    ["19:30", "Cena"],
+    ["16:30", "Arrivo degli ospiti"],
+    ["17:30", "Cerimonia"],
+    ["18:30", "Aperitivo in giardino"],
+    ["20:00", "Cena"],
     ["22:00", "Taglio della torta"],
     ["22:30", "Musica e balli"],
   ];
