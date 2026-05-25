@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { supabase } from "@/integrations/supabase/client";
 
 const rsvpSchema = z.object({
   name: z.string().trim().min(1).max(100),
@@ -76,7 +76,7 @@ async function sendToGoogleSheets(data: z.infer<typeof rsvpSchema>) {
 export const submitRsvp = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => rsvpSchema.parse(input))
   .handler(async ({ data }) => {
-    const { error } = await supabaseAdmin.from("rsvps").insert({
+    const { error } = await supabase.from("rsvps").insert({
       name: data.name,
       email: data.email,
       attending: data.attending,
