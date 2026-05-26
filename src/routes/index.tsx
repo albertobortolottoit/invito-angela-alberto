@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { toast, Toaster } from "sonner";
-import { submitRsvp } from "@/lib/rsvp.functions";
 import { BackgroundMusic } from "@/components/BackgroundMusic";
 
 import photo1 from "@/assets/photo-1.jpg";
@@ -442,7 +440,6 @@ function Regalo() {
 }
 
 function RSVP() {
-  const submit = useServerFn(submitRsvp);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
 
@@ -451,17 +448,23 @@ function RSVP() {
     const fd = new FormData(e.currentTarget);
     setLoading(true);
     try {
-      await submit({
-        data: {
+      const res = await fetch("/api/rsvp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           name: String(fd.get("name") || ""),
           email: String(fd.get("email") || ""),
           attending: fd.get("attending") === "yes",
           adults: Number(fd.get("adults") || 1),
           children: Number(fd.get("children") || 0),
-          dietary: String(fd.get("dietary") || ""),
-          message: String(fd.get("message") || ""),
-        },
+          dietary: String(fd.get("dietary") || "") || null,
+          message: String(fd.get("message") || "") || null,
+        }),
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(err.error || res.statusText);
+      }
       setDone(true);
       toast.success("Grazie! La tua risposta è stata registrata.");
     } catch (err) {
