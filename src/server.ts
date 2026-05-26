@@ -66,15 +66,79 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+const SUPABASE_URL = "https://feniqdcvhanpajlnzbgu.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg";
+const NOTIFY_EMAILS = ["alberto.bortolotto@gmail.com", "angelatar885@gmail.com"];
+
+async function handleRsvp(request: Request, env: Record<string, string>): Promise<Response> {
+  const json = (data: unknown, status = 200) =>
+    new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
+
+  let body: Record<string, unknown>;
+  try { body = await request.json(); } catch { return json({ error: "Invalid JSON" }, 400); }
+
+  const { name, email, attending, adults, children, dietary, message } = body as Record<string, unknown>;
+  if (!name || !email || typeof attending !== "boolean") return json({ error: "Missing required fields" }, 422);
+
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": `Bearer ${SUPABASE_KEY}`,
+      "Prefer": "return=minimal",
+    },
+    body: JSON.stringify({
+      name, email, attending,
+      adults: Number(adults) || 0,
+      children: Number(children) || 0,
+      dietary: dietary || null,
+      message: message || null,
+    }),
+  });
+
+  if (!res.ok) {
+    const msg = await res.text().catch(() => res.statusText);
+    return json({ error: msg }, 500);
+  }
+
+  // Fire-and-forget email
+  const apiKey = env.RESEND_API_KEY;
+  if (apiKey) {
+    const total = (Number(adults) || 0) + (Number(children) || 0);
+    fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: "Invito Angela & Alberto <onboarding@resend.dev>",
+        to: NOTIFY_EMAILS,
+        subject: `Nuova RSVP: ${name} — ${attending ? `Presente (${total} pers.)` : "Assente"}`,
+        html: `<h2>Nuova risposta RSVP</h2>
+          <p><b>Nome:</b> ${name}</p><p><b>Email:</b> ${email}</p>
+          <p><b>Presenza:</b> ${attending ? "✅ Parteciperà" : "❌ Non parteciperà"}</p>
+          ${attending ? `<p><b>Adulti:</b> ${adults}</p><p><b>Bambini:</b> ${children}</p><p><b>Totale:</b> ${total}</p>` : ""}
+          ${dietary ? `<p><b>Intolleranze:</b> ${dietary}</p>` : ""}
+          ${message ? `<p><b>Messaggio:</b> ${message}</p>` : ""}`,
+      }),
+    }).catch(console.error);
+  }
+
+  return json({ ok: true });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
-    // Map Cloudflare secrets/vars to process.env so server functions can read them
-    if (env && typeof env === "object") {
-      for (const [key, value] of Object.entries(env as Record<string, unknown>)) {
-        if (typeof value === "string") {
-          process.env[key] = value;
-        }
-      }
+    const envMap = (env && typeof env === "object" ? env : {}) as Record<string, string>;
+
+    // Map Cloudflare secrets/vars to process.env
+    for (const [key, value] of Object.entries(envMap)) {
+      if (typeof value === "string") process.env[key] = value;
+    }
+
+    // Handle RSVP API directly — bypasses TanStack routing
+    const url = new URL(request.url);
+    if (url.pathname === "/api/rsvp" && request.method === "POST") {
+      return handleRsvp(request, envMap);
     }
 
     try {
