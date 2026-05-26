@@ -70,7 +70,9 @@ const SUPABASE_URL = "https://feniqdcvhanpajlnzbgu.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg";
 const NOTIFY_EMAILS = ["alberto.bortolotto@gmail.com", "angelatar885@gmail.com"];
 
-async function handleRsvp(request: Request, env: Record<string, string>): Promise<Response> {
+type CloudflareCtx = { waitUntil: (p: Promise<unknown>) => void };
+
+async function handleRsvp(request: Request, env: Record<string, string>, ctx: CloudflareCtx): Promise<Response> {
   const json = (data: unknown, status = 200) =>
     new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
 
@@ -102,11 +104,11 @@ async function handleRsvp(request: Request, env: Record<string, string>): Promis
     return json({ error: msg }, 500);
   }
 
-  // Fire-and-forget email
+  // Use ctx.waitUntil so Cloudflare keeps the Worker alive until the email is sent
   const apiKey = env.RESEND_API_KEY;
   if (apiKey) {
     const total = (Number(adults) || 0) + (Number(children) || 0);
-    fetch("https://api.resend.com/emails", {
+    const emailPromise = fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -120,7 +122,9 @@ async function handleRsvp(request: Request, env: Record<string, string>): Promis
           ${dietary ? `<p><b>Intolleranze:</b> ${dietary}</p>` : ""}
           ${message ? `<p><b>Messaggio:</b> ${message}</p>` : ""}`,
       }),
-    }).catch(console.error);
+    }).then(r => { if (!r.ok) r.text().then(t => console.error("Resend error:", t)); })
+      .catch(e => console.error("Resend fetch failed:", e));
+    ctx.waitUntil(emailPromise);
   }
 
   return json({ ok: true });
@@ -138,7 +142,7 @@ export default {
     // Handle RSVP API directly — bypasses TanStack routing
     const url = new URL(request.url);
     if (url.pathname === "/api/rsvp" && request.method === "POST") {
-      return handleRsvp(request, envMap);
+      return handleRsvp(request, envMap, ctx as CloudflareCtx);
     }
 
     try {
