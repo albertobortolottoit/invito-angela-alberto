@@ -44,7 +44,7 @@ jobs:
 
       - name: Switch to Angelina
         run: |
-          sed -i 's/invito-angela-alberto/invito-angelina-tartaro/' wrangler.jsonc
+          sed -i 's/invito-angela-alberto/invito-angela-tartaro/' wrangler.jsonc
 
       - name: Build Angelina
         run: bun run build
