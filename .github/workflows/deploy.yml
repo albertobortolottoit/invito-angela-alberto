@@ -9,6 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy to Cloudflare Workers
+
     steps:
       - uses: actions/checkout@v4
 
@@ -19,7 +20,8 @@ jobs:
       - name: Install dependencies
         run: bun install --no-frozen-lockfile
 
-      - name: Build
+      # ── Deploy 1: invito-angela-alberto (Alberto Bortolotto) ──────────────
+      - name: Build — Alberto Bortolotto
         run: bun run build
         env:
           VITE_SUPABASE_URL: https://feniqdcvhanpajlnzbgu.supabase.co
@@ -27,8 +29,35 @@ jobs:
           VITE_SUPABASE_PROJECT_ID: feniqdcvhanpajlnzbgu
           SUPABASE_URL: https://feniqdcvhanpajlnzbgu.supabase.co
           SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg
+          VITE_IBAN_HOLDER: Alberto Bortolotto
+          VITE_IBAN: "IT74 R030 6961 5651 0000 0002 077"
 
-      - name: Deploy
+      - name: Deploy — invito-angela-alberto
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          secrets: |
+            RESEND_API_KEY
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+
+      # ── Deploy 2: invito-angelina-tartaro (Angelina Tartaro) ─────────────
+      - name: Switch worker name for Angelina
+        run: sed -i 's/"name": "invito-angela-alberto"/"name": "invito-angelina-tartaro"/' wrangler.jsonc
+
+      - name: Build — Angelina Tartaro
+        run: bun run build
+        env:
+          VITE_SUPABASE_URL: https://feniqdcvhanpajlnzbgu.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg
+          VITE_SUPABASE_PROJECT_ID: feniqdcvhanpajlnzbgu
+          SUPABASE_URL: https://feniqdcvhanpajlnzbgu.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg
+          VITE_IBAN_HOLDER: Angelina Tartaro
+          VITE_IBAN: "IT19 Z032 9601 6010 0006 7355 050"
+
+      - name: Deploy — invito-angelina-tartaro
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

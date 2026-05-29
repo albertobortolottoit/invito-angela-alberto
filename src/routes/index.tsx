@@ -22,6 +22,10 @@ const VENUE_NAME = "Villa Maria Teresa";
 const VENUE_ADDRESS = "Viale Unità D'Italia, 61, 04023 Formia LT";
 const COUPLE = { her: "Angela", him: "Alberto" };
 
+// Configurable per deployment (overridable via VITE_ env vars at build time)
+const IBAN_HOLDER = import.meta.env.VITE_IBAN_HOLDER || "Alberto Bortolotto";
+const IBAN = import.meta.env.VITE_IBAN || "IT74 R030 6961 5651 0000 0002 077";
+
 const photos = [
   { src: photo2, alt: "San Pietro a Natale" },
   { src: photo3, alt: "Escursione nei boschi" },
@@ -422,11 +426,11 @@ function Regalo() {
           <div className="space-y-3 text-sm">
             <div className="flex gap-3">
               <span className="text-muted-foreground min-w-[90px]">Intestato a</span>
-              <span className="font-medium">Alberto Bortolotto</span>
+              <span className="font-medium">{IBAN_HOLDER}</span>
             </div>
             <div className="flex gap-3">
               <span className="text-muted-foreground min-w-[90px]">IBAN</span>
-              <span className="font-mono font-medium tracking-wider">IT74 R030 6961 5651 0000 0002 077</span>
+              <span className="font-mono font-medium tracking-wider">{IBAN}</span>
             </div>
             <div className="flex gap-3">
               <span className="text-muted-foreground min-w-[90px]">Causale</span>
