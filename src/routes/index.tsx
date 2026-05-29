@@ -267,6 +267,9 @@ function Storia() {
             questo giorno con voi, che avete fatto parte della nostra storia
             e che porteremo con noi da qui in avanti.
           </p>
+          <p className="font-display italic text-foreground text-lg">
+            Che aspettate!!! Scorrete giù e confermate la vostra presenza!
+          </p>
         </div>
       </div>
       </div>
@@ -423,7 +426,7 @@ function Regalo() {
             </div>
             <div className="flex gap-3">
               <span className="text-muted-foreground min-w-[90px]">IBAN</span>
-              <span className="font-mono font-medium tracking-wider">IT00 X000 0000 0000 0000 0000 000</span>
+              <span className="font-mono font-medium tracking-wider">IT74 R030 6961 5651 0000 0002 077</span>
             </div>
             <div className="flex gap-3">
               <span className="text-muted-foreground min-w-[90px]">Causale</span>
