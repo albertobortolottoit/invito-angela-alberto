@@ -37,8 +37,10 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           secrets: |
             RESEND_API_KEY
+            SHEETS_WEBHOOK_URL
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SHEETS_WEBHOOK_URL: ${{ secrets.SHEETS_WEBHOOK_URL }}
 
       - name: Switch to Angelina
         run: |
@@ -62,5 +64,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           secrets: |
             RESEND_API_KEY
+            SHEETS_WEBHOOK_URL
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SHEETS_WEBHOOK_URL: ${{ secrets.SHEETS_WEBHOOK_URL }}
