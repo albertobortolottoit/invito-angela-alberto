@@ -14,10 +14,9 @@ const rsvpSchema = z.object({
 const SUPABASE_URL = "https://feniqdcvhanpajlnzbgu.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg";
 
-const NOTIFY_EMAILS = [
-  "alberto.bortolotto@gmail.com",
-  "angelatar885@gmail.com",
-];
+// angela disabled: Resend rejects entire request if any recipient is not the account owner
+// re-enable once a custom domain is verified on resend.com
+const NOTIFY_EMAILS = ["alberto.bortolotto@gmail.com"];
 
 export const APIRoute = createAPIFileRoute("/api/rsvp")({
   POST: async ({ request }) => {
