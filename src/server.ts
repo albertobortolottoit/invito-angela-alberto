@@ -105,23 +105,40 @@ async function handleRsvp(request: Request, env: Record<string, string>, ctx: Cl
   }
 
   // Fire-and-forget Google Sheets update
+  // Google Apps Script returns 302 — must follow redirect manually keeping POST
   const sheetsUrl = env.SHEETS_WEBHOOK_URL;
   if (sheetsUrl) {
     const total = (Number(adults) || 0) + (Number(children) || 0);
-    const sheetsPromise = fetch(sheetsUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name, email,
-        attending: attending ? true : false,
-        adults: attending ? (Number(adults) || 0) : 0,
-        children: attending ? (Number(children) || 0) : 0,
-        total: attending ? total : 0,
-        dietary: dietary || "",
-        message: message || "",
-      }),
-    }).then(r => { if (!r.ok) r.text().then(t => console.error("Sheets error:", t)); })
-      .catch(e => console.error("Sheets fetch failed:", e));
+    const sheetsBody = JSON.stringify({
+      name, email,
+      attending: attending ? true : false,
+      adults: attending ? (Number(adults) || 0) : 0,
+      children: attending ? (Number(children) || 0) : 0,
+      total: attending ? total : 0,
+      dietary: dietary || "",
+      message: message || "",
+    });
+    const sheetsPromise = (async () => {
+      try {
+        // Step 1: follow redirect manually
+        const r1 = await fetch(sheetsUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: sheetsBody,
+          redirect: "manual",
+        });
+        const targetUrl = r1.headers.get("location") ?? sheetsUrl;
+        // Step 2: re-POST to final URL
+        const r2 = await fetch(targetUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: sheetsBody,
+        });
+        if (!r2.ok) console.error("Sheets error:", await r2.text().catch(() => r2.statusText));
+      } catch (e) {
+        console.error("Sheets fetch failed:", e);
+      }
+    })();
     ctx.waitUntil(sheetsPromise);
   }
 
