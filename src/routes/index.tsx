@@ -267,7 +267,7 @@ function Storia() {
         />
         <div className="space-y-5 text-muted-foreground leading-relaxed">
           <p>
-            E così abbiamo deciso di dirci sì. Siamo felici di festeggiare
+            E così abbiamo deciso di dirci SI! Siamo felici di festeggiare
             questo giorno con voi, che avete fatto parte della nostra storia
             e che porteremo con noi da qui in avanti.
           </p>
