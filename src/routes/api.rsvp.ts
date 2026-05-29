@@ -13,24 +13,34 @@ const rsvpSchema = z.object({
 
 const SUPABASE_URL = "https://feniqdcvhanpajlnzbgu.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg";
-const NOTIFY_EMAILS = ["alberto.bortolotto@gmail.com", "angelatar885@gmail.com"];
+
+// NOTE: angelatar885@gmail.com disabled — Resend free tier only allows sending to
+// the account owner's verified email. Enable once a custom domain is verified on Resend.
+const NOTIFY_EMAILS = [
+  "alberto.bortolotto@gmail.com",
+  // "angelatar885@gmail.com",
+];
 
 export const APIRoute = createAPIFileRoute("/api/rsvp")({
   POST: async ({ request }) => {
+    const json = (data: unknown, status = 200) =>
+      new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
+
     let body: unknown;
     try {
       body = await request.json();
     } catch {
-      return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
+      return json({ error: "Invalid JSON" }, 400);
     }
 
     const parsed = rsvpSchema.safeParse(body);
     if (!parsed.success) {
-      return new Response(JSON.stringify({ error: parsed.error.message }), { status: 422 });
+      return json({ error: parsed.error.message }, 422);
     }
     const data = parsed.data;
+    const total = data.adults + data.children;
 
-    // Insert into Supabase
+    // 1. Save to Supabase
     const res = await fetch(`${SUPABASE_URL}/rest/v1/rsvps`, {
       method: "POST",
       headers: {
@@ -52,14 +62,12 @@ export const APIRoute = createAPIFileRoute("/api/rsvp")({
 
     if (!res.ok) {
       const msg = await res.text().catch(() => res.statusText);
-      return new Response(JSON.stringify({ error: msg }), { status: 500 });
+      return json({ error: msg }, 500);
     }
 
-    // Fire-and-forget: email notification
+    // 2. Email notification via Resend (fire-and-forget)
     const apiKey = process.env.RESEND_API_KEY;
     if (apiKey) {
-      const total = data.adults + data.children;
-      const attendingText = data.attending ? "✅ Parteciperà" : "❌ Non parteciperà";
       fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
@@ -70,14 +78,32 @@ export const APIRoute = createAPIFileRoute("/api/rsvp")({
           html: `<h2>Nuova risposta RSVP</h2>
             <p><b>Nome:</b> ${data.name}</p>
             <p><b>Email:</b> ${data.email}</p>
-            <p><b>Presenza:</b> ${attendingText}</p>
+            <p><b>Presenza:</b> ${data.attending ? "✅ Parteciperà" : "❌ Non parteciperà"}</p>
             ${data.attending ? `<p><b>Adulti:</b> ${data.adults}</p><p><b>Bambini:</b> ${data.children}</p><p><b>Totale:</b> ${total}</p>` : ""}
             ${data.dietary ? `<p><b>Intolleranze:</b> ${data.dietary}</p>` : ""}
             ${data.message ? `<p><b>Messaggio:</b> ${data.message}</p>` : ""}`,
         }),
-      }).catch(console.error);
+      }).catch(e => console.error("Resend fetch failed:", e));
     }
 
-    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+    // 3. Google Sheets via GET+params (POST causes redirect 302 → data lost)
+    const sheetsUrl = process.env.SHEETS_WEBHOOK_URL;
+    if (sheetsUrl) {
+      const params = new URLSearchParams({
+        name: String(data.name),
+        email: String(data.email),
+        attending: String(data.attending),
+        adults: String(data.attending ? data.adults : 0),
+        children: String(data.attending ? data.children : 0),
+        total: String(data.attending ? total : 0),
+        dietary: data.dietary || "",
+        message: data.message || "",
+      });
+      fetch(`${sheetsUrl}?${params.toString()}`)
+        .then(r => { if (!r.ok) r.text().then(t => console.error("Sheets error:", t)); })
+        .catch(e => console.error("Sheets fetch failed:", e));
+    }
+
+    return json({ ok: true });
   },
 });
