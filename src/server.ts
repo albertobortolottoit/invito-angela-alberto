@@ -120,21 +120,14 @@ async function handleRsvp(request: Request, env: Record<string, string>, ctx: Cl
     });
     const sheetsPromise = (async () => {
       try {
-        // Step 1: follow redirect manually
-        const r1 = await fetch(sheetsUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: sheetsBody,
-          redirect: "manual",
-        });
-        const targetUrl = r1.headers.get("location") ?? sheetsUrl;
-        // Step 2: re-POST to final URL
-        const r2 = await fetch(targetUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: sheetsBody,
-        });
-        if (!r2.ok) console.error("Sheets error:", await r2.text().catch(() => r2.statusText));
+        // Use GET with URL params to avoid Google Apps Script POST redirect issue
+        const sheetsData = JSON.parse(sheetsBody) as Record<string, unknown>;
+        const params = new URLSearchParams();
+        for (const [k, v] of Object.entries(sheetsData)) {
+          params.set(k, String(v ?? ""));
+        }
+        const r = await fetch(`${sheetsUrl}?${params.toString()}`);
+        if (!r.ok) console.error("Sheets error:", await r.text().catch(() => r.statusText));
       } catch (e) {
         console.error("Sheets fetch failed:", e);
       }
