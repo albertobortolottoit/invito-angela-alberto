@@ -133,13 +133,14 @@ function SplashOverlay({ onEnter }: { onEnter: () => void }) {
         type="button"
         onClick={onEnter}
         aria-label="Riproduci musica ed entra"
-        className="group"
+        className="group flex flex-col items-center gap-4"
       >
         <span className="h-20 w-20 rounded-full border-2 border-sage-deep text-sage-deep flex items-center justify-center group-hover:bg-sage-deep group-hover:text-primary-foreground transition-colors shadow-lg">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z"/>
           </svg>
         </span>
+        <span className="text-xs tracking-[0.3em] uppercase text-sage-deep font-semibold">ENTRA QUI!</span>
       </button>
     </div>
   );
