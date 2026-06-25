@@ -22,11 +22,11 @@ jobs:
       - name: Build
         run: bun run build
         env:
-          VITE_SUPABASE_URL: https://feniqdcvhanpajlnzbgu.supabase.co
-          VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg
-          VITE_SUPABASE_PROJECT_ID: feniqdcvhanpajlnzbgu
-          SUPABASE_URL: https://feniqdcvhanpajlnzbgu.supabase.co
-          SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg
+          VITE_SUPABASE_URL: https://wzwakveypwobmehvjupk.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6d2FrdmV5cHdvYm1laHZqdXBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzcxOTMsImV4cCI6MjA5NzAxMzE5M30.cWmSiXugmUoHRS9RhJ2NLgjfpoqYs_FnELofqFn8lTc
+          VITE_SUPABASE_PROJECT_ID: wzwakveypwobmehvjupk
+          SUPABASE_URL: https://wzwakveypwobmehvjupk.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6d2FrdmV5cHdvYm1laHZqdXBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzcxOTMsImV4cCI6MjA5NzAxMzE5M30.cWmSiXugmUoHRS9RhJ2NLgjfpoqYs_FnELofqFn8lTc
           VITE_IBAN_HOLDER: Alberto Bortolotto
           VITE_IBAN: IT74 R030 6961 5651 0000 0002 077
 
@@ -49,11 +49,11 @@ jobs:
       - name: Build Angelina
         run: bun run build
         env:
-          VITE_SUPABASE_URL: https://feniqdcvhanpajlnzbgu.supabase.co
-          VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg
-          VITE_SUPABASE_PROJECT_ID: feniqdcvhanpajlnzbgu
-          SUPABASE_URL: https://feniqdcvhanpajlnzbgu.supabase.co
-          SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg
+          VITE_SUPABASE_URL: https://wzwakveypwobmehvjupk.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6d2FrdmV5cHdvYm1laHZqdXBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzcxOTMsImV4cCI6MjA5NzAxMzE5M30.cWmSiXugmUoHRS9RhJ2NLgjfpoqYs_FnELofqFn8lTc
+          VITE_SUPABASE_PROJECT_ID: wzwakveypwobmehvjupk
+          SUPABASE_URL: https://wzwakveypwobmehvjupk.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6d2FrdmV5cHdvYm1laHZqdXBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzcxOTMsImV4cCI6MjA5NzAxMzE5M30.cWmSiXugmUoHRS9RhJ2NLgjfpoqYs_FnELofqFn8lTc
           VITE_IBAN_HOLDER: Angelina Tartaro
           VITE_IBAN: IT19 Z032 9601 6010 0006 7355 050
 

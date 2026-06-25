@@ -11,8 +11,8 @@ const rsvpSchema = z.object({
   message: z.string().trim().max(1000).optional().nullable(),
 });
 
-const SUPABASE_URL = "https://feniqdcvhanpajlnzbgu.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZlbmlxZGN2aGFucGFqbG56Ymd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MTY1MjAsImV4cCI6MjA5NTI5MjUyMH0.Vs3pJBplSYFQG2kUY8UpXpDRyiSWbyDtp4RwwOqHVxg";
+const SUPABASE_URL = "https://wzwakveypwobmehvjupk.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6d2FrdmV5cHdvYm1laHZqdXBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MzcxOTMsImV4cCI6MjA5NzAxMzE5M30.cWmSiXugmUoHRS9RhJ2NLgjfpoqYs_FnELofqFn8lTc";
 
 // angela disabled: Resend rejects entire request if any recipient is not the account owner
 // re-enable once a custom domain is verified on resend.com
