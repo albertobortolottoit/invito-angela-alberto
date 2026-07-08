@@ -497,7 +497,7 @@ function RSVP() {
   return (
     <Section id="rsvp" eyebrow="RSVP" title="Sarai con noi?">
       <p className="text-center text-muted-foreground mb-10 max-w-md mx-auto">
-        Ti chiediamo di confermare la presenza entro il <strong>1 luglio 2026</strong>.
+        Ti chiediamo di confermare la presenza entro il <strong>20 luglio 2026</strong>.
       </p>
       <form onSubmit={onSubmit} className="grid gap-5 max-w-xl mx-auto">
         <Field name="name" label="Nome e cognome" required />
